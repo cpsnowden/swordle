@@ -15,3 +15,7 @@ app.add_middleware(
 @app.get("/")
 def root():
     return { 'greeting': 'Hello' }
+
+@app.get("/test")
+def test():
+    return { 'test': 'passed' }
