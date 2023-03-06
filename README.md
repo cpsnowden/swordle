@@ -1,5 +1,9 @@
 # sign-game-server
 
+
+## Deployed Environments
+
+GCP: https://sign-game-server-yckhsn477a-uc.a.run.app/docs
 ## Developing Locally
 
 #### Create VENV
