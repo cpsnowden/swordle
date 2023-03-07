@@ -15,6 +15,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-@app.get("/ping")
+@app.get("/")
 def root():
     return { 'ping': 'pong' }
