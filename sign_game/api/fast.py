@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sign_game.api.routers import letterprediction
 
 app = FastAPI()
+
+app.include_router(letterprediction.router)
 
 # Optional, good practice for dev purposes. Allow all middlewares
 app.add_middleware(
@@ -14,4 +17,4 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return { 'greeting': 'Hello' }
+    return { 'ping': 'pong' }
