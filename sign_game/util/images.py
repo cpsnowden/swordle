@@ -21,4 +21,4 @@ def b64_frame_to_cv2(b64_frame: str):
     """
     frame_data = b64_frame.split(",", 2)[1]
     nparr = np.frombuffer(base64.b64decode(frame_data), np.uint8)
-    yield cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    return cv2.imdecode(nparr, cv2.IMREAD_COLOR)

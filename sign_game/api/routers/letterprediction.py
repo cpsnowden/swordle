@@ -24,6 +24,7 @@ def predict_letter_from_frame_sequence(frame_sequence: FrameSequence):
 
     request_time = datetime.datetime.now()
     for i, cv2_img in enumerate(b64_frames_to_cv2(frame_sequence.frames)):
+        # Move this inside a pipeline - it is model preprocessing specific...
         cv2_img_w_landmarks, landmark_dict = landmarks.image_to_landmark(cv2_img, draw_landmarks=save_frames)
         pprint(landmark_dict)
         if landmark_dict is None:

@@ -11,17 +11,24 @@ class Landmarks():
         self.mp_drawing = mp.solutions.drawing_utils # Drawing utilities
         self.model = self.mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5, max_num_hands=1)
 
+    def image_to_landmark(self, frame, draw_landmarks=False):
 
-    def mediapipe_detection(self, image):
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # CV2 gets image as BGR, this converts it to RGB
-        image.flags.writeable = False # Locks write on image so that nobody can change the image while we process
-        results = self.model.process(image) # This uses mediapipe to detect
-        image.flags.writeable = True # Unlocks write on image
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR) # Converts it back to BGR
-        return image, results
+        # Make detection
+        results = self.__mediapipe_detection(frame)
+        landmark_object = self.__get_landmark_object(results)
+        if draw_landmarks:
+            # Draw landmarks using Mediapipe
+            frame = self.__draw_landmarks(frame, results)
 
-    def draw_landmarks(self, image, results):
+        return frame, landmark_object
 
+    def __mediapipe_detection(self, image):
+        bgr_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # CV2 gets image as BGR, this converts it to RGB
+        bgr_image.flags.writeable = False # Locks write on image so that nobody can change the image while we process
+        results = self.model.process(bgr_image) # This uses mediapipe to detect
+        return results
+
+    def __draw_landmarks(self, image, results):
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:
                 self.mp_drawing.draw_landmarks(
@@ -31,86 +38,16 @@ class Landmarks():
 
         return image
 
-    def get_landmark_object(self, results):
+    def __get_landmark_object(self, results):
         landmark_object = {}
         if results.multi_hand_landmarks:
+            detected_hand = results.multi_hand_landmarks[0]
             for handmark in self.mp_hands.HandLandmark:
-                landmark = results.multi_hand_landmarks[0].landmark[handmark]
+                landmark = detected_hand.landmark[handmark]
+                # ??
                 name = str(handmark)[13:]
                 landmark_object[name+'_x'] = landmark.x
                 landmark_object[name+'_y'] = landmark.y
                 landmark_object[name+'_z'] = landmark.z
 
-        return(landmark_object)
-
-    def image_to_landmark(self, frame):
-
-        # Make detection
-        image, results = self.mediapipe_detection(frame)
-
-        if results: # A hand has been found
-            # Draw landmarks using Mediapipe
-            image = self.draw_landmarks(image, results)
-            landmark_object = self.get_landmark_object(results)
-            return image, landmark_object
-
-    def get_image_with_landmarks(self, image_path):
-
-        image = cv2.imread(image_path)
-        image_with_landmarks, landmark_object = self.image_to_landmark(image)
-        plt.imshow(image_with_landmarks)
-        plt.show()
-        print(len(landmark_object.keys()))
-
-
-    def video_to_landmark(self, video_path):
-        array_landmark_objects = []
-        cap = cv2.VideoCapture(video_path) # Grab video from file
-
-        while cap.isOpened():
-            # Read a feed
-            ret, frame = cap.read()
-
-            if ret == True:
-                _, landmark_object = self.image_to_landmark(frame)
-
-                array_landmark_objects.append(landmark_object)
-                print('running...')
-            else:
-                break
-
-        cap.release()
-        cv2.destroyAllWindows()
-
-        print(pd.DataFrame.from_dict(array_landmark_objects))
-
-    def create_csv_from_dataset_folder(self):
-
-        array_landmark_objects = []
-        img_ds_path = os.getcwd() + '/asl_dataset'
-        dir_folders = os.listdir(img_ds_path)
-
-        for folder_name in dir_folders:
-            folder_files = os.listdir(img_ds_path+'/'+folder_name)
-
-            for image_name in folder_files:
-                image_path = img_ds_path+'/'+folder_name+'/'+image_name
-                image = cv2.imread(image_path)
-                _, landmark_object = self.image_to_landmark(image)
-                landmark_object['TARGET'] = folder_name.upper()
-
-                array_landmark_objects.append(landmark_object)
-
-        df = pd.DataFrame.from_dict(array_landmark_objects)
-
-        df.to_csv('./images_ds.csv')
-
-
-
-if __name__ == '__main__':
-    image_path = './asl_dataset/a/hand1_a_bot_seg_1_cropped.jpeg'
-    video_path = './asl_dataset_videos/J/1.avi'
-    landmarks = Landmarks()
-    # landmarks.get_image_with_landmarks(image_path)
-    # landmarks.video_to_landmark(video_path)
-    landmarks.create_csv_from_dataset_folder()
+        return landmark_object
