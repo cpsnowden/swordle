@@ -4,5 +4,7 @@ opencv-python
 numpy
 pandas
 
+
 mediapipe-silicon; sys_platform == 'darwin' and 'ARM' in platform_version # Mac Intel chips
 mediapipe; sys_platform != 'darwin' # Windows & Ubuntu Intel chips
+
