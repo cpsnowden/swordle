@@ -12,7 +12,6 @@ class Landmarks():
         self.mp_drawing = mp.solutions.drawing_utils # Drawing utilities
         self.model = self.mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5, max_num_hands=1)
 
-
     def mediapipe_detection(self, image):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # CV2 gets image as BGR, this converts it to RGB
         image.flags.writeable = False # Locks write on image so that nobody can change the image while we process
@@ -22,7 +21,6 @@ class Landmarks():
         return image, results
 
     def draw_landmarks(self, image, results):
-        
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:
                 self.mp_drawing.draw_landmarks(
@@ -45,7 +43,6 @@ class Landmarks():
         return(landmark_object)
 
     def image_to_landmark(self, frame):
-   
         # Make detection
         image, results = self.mediapipe_detection(frame)
 
@@ -56,13 +53,12 @@ class Landmarks():
             return image, landmark_object
 
     def get_image_with_landmarks(self, image_path):
-    
+
         image = cv2.imread(image_path)
         image_with_landmarks, landmark_object = self.image_to_landmark(image)
         plt.imshow(image_with_landmarks)
         plt.show()
         print(len(landmark_object.keys()))
-
 
     def video_to_landmark(self, video_path):
         array_landmark_objects = []
@@ -71,7 +67,6 @@ class Landmarks():
         while cap.isOpened():
             # Read a feed
             ret, frame = cap.read()
-            
             if ret == True:
                 _, landmark_object = self.image_to_landmark(frame)
 
@@ -97,6 +92,7 @@ class Landmarks():
             for image_name in folder_files:
                 image_path = img_ds_path+'/'+folder_name+'/'+image_name
                 image = cv2.imread(image_path)
+
                 image_with_landmarks, landmark_object = self.image_to_landmark(image)
 
                 landmark_object['TARGET'] = folder_name.upper()
@@ -126,5 +122,4 @@ if __name__ == '__main__':
     # landmarks.get_image_with_landmarks(image_path)
     # landmarks.video_to_landmark(video_path)
     landmarks.create_csv_from_dataset_folder()
-
 
