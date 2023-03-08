@@ -1,7 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File
 from typing import List
 from pydantic import BaseModel
-from sign_game.util.images import b64_frames_to_cv2
+from sign_game.util.images import b64_frames_to_cv2, bytes_to_cv2
 from sign_game.ml.landmarks import Landmarks
 from sign_game.util import random_letter
 from pprint import pprint
@@ -17,6 +17,15 @@ class FrameSequence(BaseModel):
     frames: List[str]
 
 landmarks = Landmarks()
+
+@router.post('/frame')
+async def predict_letter_from_frame(img: UploadFile=File(...)):
+    contents = await img.read()
+    cv2_img = bytes_to_cv2(contents)
+    _, landmark_dict = landmarks.image_to_landmark(cv2_img)
+    pprint(landmark_dict)
+
+    return { 'prediction': random_letter() }
 
 @router.post('/frame-sequence')
 def predict_letter_from_frame_sequence(frame_sequence: FrameSequence):
@@ -36,10 +45,3 @@ def predict_letter_from_frame_sequence(frame_sequence: FrameSequence):
             cv2.imwrite(f"data/{request_time}/{i}_landmarks.png", cv2_img_w_landmarks)
 
     return { 'prediction': random_letter() }
-
-
-def b64_to_cv2(frames: List[str]):
-      for frame in frames:
-        frame_data = frame.split(",", 2)[1]
-        nparr = np.frombuffer(base64.b64decode(frame_data), np.uint8)
-        yield cv2.imdecode(nparr, cv2.IMREAD_COLOR)

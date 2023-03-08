@@ -23,9 +23,9 @@ class Landmarks():
         return frame, landmark_object
 
     def __mediapipe_detection(self, image):
-        bgr_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # CV2 gets image as BGR, this converts it to RGB
-        bgr_image.flags.writeable = False # Locks write on image so that nobody can change the image while we process
-        results = self.model.process(bgr_image) # This uses mediapipe to detect
+        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # CV2 gets image as BGR, this converts it to RGB
+        rgb_image.flags.writeable = False # Locks write on image so that nobody can change the image while we process
+        results = self.model.process(rgb_image) # This uses mediapipe to detect
         return results
 
     def __draw_landmarks(self, image, results):
