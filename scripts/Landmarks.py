@@ -38,9 +38,9 @@ class Landmarks():
             for handmark in self.mp_hands.HandLandmark: 
                 landmark = results.multi_hand_landmarks[0].landmark[handmark]
                 name = str(handmark)[13:]
-                landmark_object[name+'_x'] = landmark.x
-                landmark_object[name+'_y'] = landmark.y
-                landmark_object[name+'_z'] = landmark.z
+                landmark_object[name+'_X'] = landmark.x
+                landmark_object[name+'_Y'] = landmark.y
+                landmark_object[name+'_Z'] = landmark.z
             
         return(landmark_object)
 
@@ -76,19 +76,19 @@ class Landmarks():
                 _, landmark_object = self.image_to_landmark(frame)
 
                 array_landmark_objects.append(landmark_object)
-                print('running...')
             else:
                 break
             
         cap.release()
         cv2.destroyAllWindows()
 
-        print(pd.DataFrame.from_dict(array_landmark_objects))
+        print(pd.DataFrame.from_dict(array_landmark_objects).dropna().reset_index(drop=True))
 
     def create_csv_from_dataset_folder(self):
  
         array_landmark_objects = []
-        img_ds_path = os.getcwd() + '/asl_dataset'
+        curr_dir = os.getcwd() 
+        img_ds_path = curr_dir + '/asl_dataset'
         dir_folders = os.listdir(img_ds_path)
 
         for folder_name in dir_folders:
@@ -97,14 +97,25 @@ class Landmarks():
             for image_name in folder_files:
                 image_path = img_ds_path+'/'+folder_name+'/'+image_name
                 image = cv2.imread(image_path)
-                _, landmark_object = self.image_to_landmark(image)
+                image_with_landmarks, landmark_object = self.image_to_landmark(image)
+
                 landmark_object['TARGET'] = folder_name.upper()
+
+                landmark_image_path = curr_dir +'/asl_dataset_landmarks/'+folder_name+'/'+image_name
+                cv2.imwrite(landmark_image_path, image_with_landmarks)
+                cv2.waitKey(0)
+                landmark_object['PATH'] = './asl_dataset_landmarks/'+folder_name+'/'+image_name
 
                 array_landmark_objects.append(landmark_object)
 
         df = pd.DataFrame.from_dict(array_landmark_objects)
 
-        df.to_csv('./images_ds.csv')
+        try:
+            df.to_csv('./images_ds.csv')
+        except Exception as e:
+            print(e)
+        else:
+            print('CVS file created!')
 
 
 
