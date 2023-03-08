@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# adding image-aug data to git ignore
+image-augmentation/data/*
