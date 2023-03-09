@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sign_game.api.routers import letterprediction
+from sign_game.ml.registry import load_model
 
 app = FastAPI()
+
+print("Loading Model")
+app.state.model = load_model()
+print("Loaded Model")
 
 app.include_router(letterprediction.router)
 
