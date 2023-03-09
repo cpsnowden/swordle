@@ -25,6 +25,7 @@ steps:
       - >-
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
       - '--region=$_DEPLOY_REGION'
+      - '--memory=$_GCR_MEMORY'
       - '--quiet'
     id: Deploy
     entrypoint: gcloud
@@ -37,6 +38,7 @@ substitutions:
   _SERVICE_NAME: sign-game-server
   _TRIGGER_ID: a7bde02b-3e9c-47ac-86e1-2c59d7e904bf
   _DEPLOY_REGION: us-central1
+  _GCR_MEMORY: 2Gi
   _GCR_HOSTNAME: us.gcr.io
 tags:
   - gcp-cloud-build-deploy-cloud-run
