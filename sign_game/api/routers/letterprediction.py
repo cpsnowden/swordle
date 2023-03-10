@@ -15,10 +15,6 @@ class FrameSequence(BaseModel):
     frames: List[str]
 
 
-class LetterPredictionError(str, Enum):
-    no_hand_detected = "no_hand_detected"
-
-
 class LetterPredictionResponse(BaseModel):
     prediction: str
 
