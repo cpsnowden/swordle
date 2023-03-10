@@ -1,10 +1,11 @@
 from tensorflow.keras import Model
-from fastapi import APIRouter, UploadFile, Depends
+from fastapi import APIRouter, UploadFile, Depends, HTTPException
 from typing import List
 from pydantic import BaseModel
+from enum import Enum
 from sign_game.api.dependencies import resolve_model
 from sign_game.util.images import b64_frames_to_cv2, bytes_to_cv2
-from sign_game.ml.preprocessing import preprocess
+from sign_game.ml.preprocessing import preprocess, NoHandDetectedError
 from sign_game.ml.model import predict
 
 router = APIRouter(prefix="/letter-prediction", tags=["Letter Prediction"])
@@ -12,6 +13,10 @@ router = APIRouter(prefix="/letter-prediction", tags=["Letter Prediction"])
 
 class FrameSequence(BaseModel):
     frames: List[str]
+
+
+class LetterPredictionError(str, Enum):
+    no_hand_detected = "no_hand_detected"
 
 
 class LetterPredictionResponse(BaseModel):
@@ -34,7 +39,11 @@ def predict_letter_from_frame_sequence(frame_sequence: FrameSequence, model: Mod
 
 
 def process(cv2_imgs, model) -> LetterPredictionResponse:
-    X_pred = preprocess(cv2_imgs)
+    try:
+        X_pred = preprocess(cv2_imgs)
+    except NoHandDetectedError:
+        raise HTTPException(400, "No hand detected!")
+
     y_pred = predict(model, X_pred)
     return LetterPredictionResponse(prediction=y_pred)
 

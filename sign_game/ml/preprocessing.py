@@ -5,6 +5,13 @@ from sign_game.ml.landmarks import Landmarks
 landmark = Landmarks()
 
 
+class NoHandDetectedError(Exception):
+    """
+    Raised if no hand could be detected in a series of frames
+    """
+    pass
+
+
 def frames_to_landmarks(frames) -> np.ndarray:
 
     frames_landmarks = []
@@ -15,7 +22,8 @@ def frames_to_landmarks(frames) -> np.ndarray:
         else:
             print("WARNING - no landmarks in frame")
 
-    # TODO what to do if there are no landmarks
+    if len(frames_landmarks) == 0:
+        raise NoHandDetectedError
 
     return np.expand_dims(np.vstack(frames_landmarks), -1)
 
@@ -23,6 +31,8 @@ def frames_to_landmarks(frames) -> np.ndarray:
 def preprocess(cv2_imgs):
     """
     Preprocessed a set of CV2 images into landmarks
+
+    raises: NoHandDetectedError if no hand is detected in any images
     """
     print("Extracting landmarks")
     frames = frames_to_landmarks(cv2_imgs)
