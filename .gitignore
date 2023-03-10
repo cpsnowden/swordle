@@ -5,6 +5,7 @@ __pycache__/
 
 models/
 raw_data/
+.vscode/
 
 # C extensions
 *.so
