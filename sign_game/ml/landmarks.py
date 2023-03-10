@@ -12,6 +12,12 @@ class Landmarks:
         self.model = self.mp_hands.Hands(
             min_detection_confidence=0.5, min_tracking_confidence=0.5, max_num_hands=1)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
+
     def close(self):
         self.model.close()
 
