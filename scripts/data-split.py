@@ -29,3 +29,7 @@ def csv_train_test_split(path, fraction):
     print('test CSV completed!')
     df_train.to_csv('train.csv', index=False)
     print('train CSV completed!')
+
+if __name__ == '__main__':
+    csv_path = 'images_ds.csv'
+    csv_train_test_split(csv_path, 0.2)

@@ -76,3 +76,21 @@ from sign_game.ml.landmarks import Landmarks()
 ```python
 landmarks = Landmarks()
 ```
+
+## Splitting a CSV - using data-split.py
+1. put the csv to be split into the same folder as data-split.py
+
+2. update the path in data-split.py as below to include the name of the csv to be split
+
+```python
+if __name__ == '__main__':
+    csv_path = 'images_ds.csv'
+    csv_train_test_split(csv_path, 0.2)
+```
+3. run
+
+```bash
+python data-split.py
+```
+
+4. Enjoy your split CSV :)
