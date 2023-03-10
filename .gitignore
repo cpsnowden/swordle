@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# asl_dataset
+/raw_data/asl_dataset
