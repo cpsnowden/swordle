@@ -1,37 +1,64 @@
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
-from tensorflow.keras.callbacks import EarlyStopping
+
 from tensorflow.keras import Model
-from sklearn.metrics import classification_report
+import numpy as np
 
-def initialize_model(input_shape: tuple) -> Model:
 
-    print("✅ model initialized")
+import string
+alphabet = list(string.ascii_uppercase)
 
-    return model
+# def initialize_model(input_shape: tuple) -> Model:
 
-def compile_model(model: Model):
-    model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
-                  metrics=['accuracy'])
-    print("✅ model compiled")
-    return model
+#     print("✅ model initialized")
 
-def train_model(model: Model,
-                X: np.ndarray,
-                y: np.ndarray,
-                patience=10,
-                validation_split=0.3) -> Tuple[Model, dict]:
-    es = EarlyStopping(patience=patience
-                       validation_split=validation_split,
-                       restore_best_weights=True,
-                       verbose=0)
+#     return model
 
-    history = model.fit(X, y, epochs=500, callbacks=[es], verbose=0)
-    print("✅ model trained")
+# def compile_model(model: Model):
+#     model.compile(loss='categorical_crossentropy',
+#                   optimizer='adam',
+#                   metrics=['accuracy'])
+#     print("✅ model compiled")
+#     return model
 
-    return model, history
+# def train_model(model: Model,
+#                 X: np.ndarray,
+#                 y: np.ndarray,
+#                 patience=10,
+#                 validation_split=0.3) -> Tuple[Model, dict]:
+#     es = EarlyStopping(patience=patience,
+#                        validation_split=validation_split,
+#                        restore_best_weights=True,
+#                        verbose=0)
+
+#     history = model.fit(X, y, epochs=500, callbacks=[es], verbose=0)
+#     print("✅ model trained")
+
+#     return model, history
+
 
 def predict(model: Model,
             X_pred: np.ndarray):
-    pass
+    print("Predicting")
+    y = model.predict(X_pred)
+    print(f"Predicted shape {y.shape}")
+    predicted_classes = np.argmax(y, axis=1)
+    print("Predicted classes", predicted_classes)
+    predicted_class = np.bincount(predicted_classes).argmax()
+    predicted_letter = alphabet[predicted_class]
+    print("Predicted class", predicted_class, predicted_letter)
+    return predicted_letter
+
+
+if __name__ == '__main__':
+    from sign_game.ml.registry import load_model
+    import cv2
+    import matplotlib.pyplot as plt
+    from sign_game.ml.landmarks import Landmarks
+    latest_model = load_model()
+    image = cv2.imread('images/C.jpg')
+    landmarks = Landmarks()
+    cv2_img_w_landmarks, landmark_object = landmarks.image_to_landmark(
+        image, draw_landmarks=True)
+    print(landmark_object)
+    plt.imshow(cv2_img_w_landmarks)
+    plt.show()
+    X_pred = np.reshape(np.array(landmark_object.values), (63, 1))

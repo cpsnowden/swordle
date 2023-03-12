@@ -4,6 +4,7 @@ import mediapipe as mp
 import cv2
 import pandas as pd
 import os
+import numpy as np
 
 class Landmarks():
     def __init__ (self):
@@ -14,7 +15,7 @@ class Landmarks():
     def image_to_landmark(self, frame, draw_landmarks=False):
 
         # Make detection
-        results = self.__mediapipe_detection(frame)
+        results, frame = self.__mediapipe_detection(frame)
         landmark_object = self.__get_landmark_object(results)
         if draw_landmarks:
             # Draw landmarks using Mediapipe
@@ -23,10 +24,12 @@ class Landmarks():
         return frame, landmark_object
 
     def __mediapipe_detection(self, image):
-        bgr_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # CV2 gets image as BGR, this converts it to RGB
-        bgr_image.flags.writeable = False # Locks write on image so that nobody can change the image while we process
-        results = self.model.process(bgr_image) # This uses mediapipe to detect
-        return results
+        rbg_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # CV2 gets image as BGR, this converts it to RGB
+        rbg_image.flags.writeable = False # Locks write on image so that nobody can change the image while we process
+        results = self.model.process(rbg_image) # This uses mediapipe to detect
+        rbg_image.flags.writeable = True
+        bgr_image = cv2.cvtColor(rbg_image, cv2.COLOR_RGB2BGR) # Converts it back to BGR
+        return results, bgr_image
 
     def __draw_landmarks(self, image, results):
         if results.multi_hand_landmarks:
@@ -51,3 +54,25 @@ class Landmarks():
                 landmark_object[name+'_z'] = landmark.z
 
         return landmark_object
+
+    def __get_landmark_np_array(self, results):
+        if results.multi_hand_landmarks:
+            detected_hand = results.multi_hand_landmarks[0]
+
+            def extract_handmark(handmark):
+                landmark = detected_hand.landmark[handmark]
+                return (landmark.x, landmark.y, landmark.z)
+
+            return np.array([extract_handmark(handmark) for handmark in self.mp_hands.HandLandmark])
+
+    def image_to_landmark_np(self, frame, draw_landmarks=False):
+
+        # Make detection
+        results, frame = self.__mediapipe_detection(frame)
+
+        landmark_object = self.__get_landmark_np_array(results)
+        if draw_landmarks:
+            # Draw landmarks using Mediapipe
+            frame = self.__draw_landmarks(frame, results)
+
+        return frame, landmark_object
