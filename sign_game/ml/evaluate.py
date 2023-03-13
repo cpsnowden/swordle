@@ -12,7 +12,7 @@ def evaluate_model(y_true, y_pred, plot_cm=True):
         y_pred (array-like): Predicted labels
         plot_cm (bool): Whether or not to plot the confusion matrix.
 
-    """g
+    """
     if plot_cm:
         disp = ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
         plt.close(1) # don't display pre-sized matrix
