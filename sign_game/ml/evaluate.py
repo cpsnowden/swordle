@@ -5,7 +5,7 @@ import numpy as np
 
 def evaluate_model(y_true, y_pred, plot_cm=True):
     """
-    Display a confusion matrix and classification report based on true and predicted values.
+    Display a confusion matrix and classification report based on true, and predicted values.
 
     Args:
         y_true (array-like): True labels
