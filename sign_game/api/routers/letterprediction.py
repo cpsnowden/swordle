@@ -1,10 +1,13 @@
 from tensorflow.keras import Model
 from fastapi import APIRouter, UploadFile, Depends
 from typing import List
+from enum import Enum
 from pydantic import BaseModel
+from enum import Enum
+from typing import Optional
 from sign_game.api.dependencies import resolve_model
 from sign_game.util.images import b64_frames_to_cv2, bytes_to_cv2
-from sign_game.ml.preprocessing import preprocess
+from sign_game.ml.preprocessing import preprocess, NoHandDetectedError
 from sign_game.ml.model import predict
 
 router = APIRouter(prefix="/letter-prediction", tags=["Letter Prediction"])
@@ -14,8 +17,14 @@ class FrameSequence(BaseModel):
     frames: List[str]
 
 
+class PredictionStatus(str, Enum):
+    success = 'success',
+    no_hand_detected = 'no_hand_detected'
+
+
 class LetterPredictionResponse(BaseModel):
-    prediction: str
+    predictionStatus: PredictionStatus
+    prediction: Optional[str]
 
 
 @router.post('/frame')
@@ -34,27 +43,10 @@ def predict_letter_from_frame_sequence(frame_sequence: FrameSequence, model: Mod
 
 
 def process(cv2_imgs, model) -> LetterPredictionResponse:
-    X_pred = preprocess(cv2_imgs)
+    try:
+        X_pred = preprocess(cv2_imgs)
+    except NoHandDetectedError:
+        return LetterPredictionResponse(predictionStatus=PredictionStatus.no_hand_detected)
+
     y_pred = predict(model, X_pred)
-    return LetterPredictionResponse(prediction=y_pred)
-
-
-# save_frames = False
-
-# def process(cv2_imgs) -> LetterPredictionResponse:
-
-#     request_time = datetime.datetime.now()
-#     for i, cv2_img in enumerate(cv2_imgs):
-#         # Move this inside a pipeline - it is model preprocessing specific...
-#         cv2_img_w_landmarks, landmark_dict = landmarks.image_to_landmark(
-#             cv2_img, draw_landmarks=save_frames)
-#         pprint(landmark_dict)
-#         if landmark_dict is None:
-#             print(f"No landmark found in frame {i}")
-#         if save_frames:
-#             os.makedirs(f"data/{request_time}", exist_ok=True)
-#             cv2.imwrite(f"data/{request_time}/{i}.png", cv2_img)
-#             cv2.imwrite(
-#                 f"data/{request_time}/{i}_landmarks.png", cv2_img_w_landmarks)
-
-#     return LetterPredictionResponse(prediction=random_letter())
+    return LetterPredictionResponse(predictionStatus=PredictionStatus.success, prediction=y_pred)
