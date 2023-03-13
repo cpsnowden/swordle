@@ -1,23 +1,4 @@
 import pandas as pd
-import numpy as np
-
-
-def normalize_handmarks_3dnp(hand_landmarks_np):
-    """
-    Normalizeds a handmarks numpy array per row by:
-      1. Calculating the mean
-            - X position mu_x
-            - Y position mu_y
-            - Z position mu_z
-      2. Calculating the standard deviation of the:
-            - X position std_x
-            - Y position std_y
-            - Z position std_z
-      3. Normalizing as (x_i - mu_x) / std_x etc
-    """
-    image_mean = hand_landmarks_np.mean(axis=1)[:, np.newaxis, :]
-    image_std = hand_landmarks_np.std(axis=1)[:, np.newaxis, :]
-    return (hand_landmarks_np - image_mean) / image_std
 
 
 def normalize_handmarks_per_image(df):
