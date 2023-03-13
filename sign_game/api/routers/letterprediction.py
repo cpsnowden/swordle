@@ -1,5 +1,5 @@
 from tensorflow.keras import Model
-from fastapi import APIRouter, UploadFile, Depends, HTTPException
+from fastapi import APIRouter, UploadFile, Depends
 from typing import List
 from enum import Enum
 from pydantic import BaseModel
