@@ -1,6 +1,8 @@
 
 import numpy as np
+import pandas as pd
 from sign_game.ml.landmarks import Landmarks
+from sign_game.ml.landmarks_utils import normalize_handmarks_per_image
 
 landmark = Landmarks()
 
@@ -9,15 +11,20 @@ def frames_to_landmarks(frames) -> np.ndarray:
 
     frames_landmarks = []
     for frame in frames:
-        _, landmarks_np = landmark.image_to_landmark_np(frame)
-        if landmarks_np is not None:
-            frames_landmarks.append(landmarks_np.flatten())
+        _, landmarks = landmark.image_to_landmark(frame)
+        print(landmarks)
+        if landmarks is not None:
+            norm_landmark = normalize_handmarks_per_image(pd.DataFrame.from_dict([landmarks]))
+            landmarks = norm_landmark.to_numpy()
+            frames_landmarks.append(landmarks.flatten())
         else:
             print("WARNING - no landmarks in frame")
 
     # TODO what to do if there are no landmarks
 
-    return np.expand_dims(np.vstack(frames_landmarks), -1)
+    res = np.expand_dims(np.vstack(frames_landmarks), -1)
+
+    return res
 
 
 def preprocess(cv2_imgs):
