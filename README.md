@@ -37,6 +37,7 @@ make run
 1. Update .env with the path to the new model
 2. Run `make run`
 3. Check that you model is picked up at http://localhost:8000/info
+4. To switch production to the new model ensure you update `env.yaml`
 
 ## Converting images to landmark data - using scripts - Landmarks.py
 
