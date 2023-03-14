@@ -12,7 +12,6 @@ def frames_to_landmarks(frames) -> np.ndarray:
     frames_landmarks = []
     for frame in frames:
         _, landmarks = landmark.image_to_landmark(frame)
-        print(landmarks)
         if landmarks is not None:
             norm_landmark = normalize_handmarks_per_image(pd.DataFrame.from_dict([landmarks]))
             landmarks = norm_landmark.to_numpy()
