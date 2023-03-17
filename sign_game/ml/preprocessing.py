@@ -12,12 +12,16 @@ class NoHandDetectedError(Exception):
     pass
 
 
+# TODO Clean this up, enable a single image to be handled directly or to enable video mode
+
+single_image_landmarks = Landmarks(static_image_mode=True)
+
+
 def frames_to_landmarks(frames) -> np.ndarray:
 
     frames_landmarks = []
-    landmark = Landmarks()
     for frame in frames:
-        _, landmarks = landmark.image_to_landmark(frame)
+        _, landmarks = single_image_landmarks.image_to_landmark(frame)
         if landmarks is not None:
             norm_landmark = normalize_handmarks_per_image(
                 pd.DataFrame.from_dict([landmarks]))
