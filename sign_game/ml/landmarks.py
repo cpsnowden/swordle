@@ -8,11 +8,15 @@ import numpy as np
 
 
 class Landmarks():
-    def __init__(self):
+    def __init__(self, static_image_mode=False):
         self.mp_hands = mp.solutions.hands  # hands model
         self.mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
         self.model = self.mp_hands.Hands(
-            min_detection_confidence=0.5, min_tracking_confidence=0.5, max_num_hands=1)
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5,
+            max_num_hands=1,
+            static_image_mode=static_image_mode
+        )
 
     def image_to_landmark(self, frame, draw_landmarks=False):
 
