@@ -7,12 +7,17 @@ import os
 import numpy as np
 
 
+
 class Landmarks():
-    def __init__(self):
+    def __init__(self, static_image_mode=False):
         self.mp_hands = mp.solutions.hands  # hands model
         self.mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
         self.model = self.mp_hands.Hands(
-            min_detection_confidence=0.5, min_tracking_confidence=0.5, max_num_hands=1)
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5,
+            max_num_hands=1,
+            static_image_mode=static_image_mode
+        )
 
     def image_to_landmark(self, frame, draw_landmarks=False):
 
@@ -48,8 +53,8 @@ class Landmarks():
         return image
 
     def __get_landmark_object(self, results):
-        landmark_object = {}
         if results.multi_hand_landmarks:
+            landmark_object = {}
             detected_hand = results.multi_hand_landmarks[0]
             for handmark in self.mp_hands.HandLandmark:
                 landmark = detected_hand.landmark[handmark]
@@ -59,7 +64,7 @@ class Landmarks():
                 landmark_object[name+'_Y'] = landmark.y
                 landmark_object[name+'_Z'] = landmark.z
 
-        return landmark_object
+            return landmark_object
 
     def __get_landmark_np_array(self, results):
         if results.multi_hand_landmarks:
