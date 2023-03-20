@@ -1,8 +1,10 @@
 
-from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import Model
 import numpy as np
-from typing import Tuple
+
+
+import string
+alphabet = list(string.ascii_uppercase)
 
 # def initialize_model(input_shape: tuple) -> Model:
 
@@ -32,21 +34,31 @@ from typing import Tuple
 
 #     return model, history
 
+
 def predict(model: Model,
             X_pred: np.ndarray):
-    # model.predict()
-    pass
+    print("Predicting")
+    y = model.predict(X_pred)
+    print(f"Predicted shape {y.shape}")
+    predicted_classes = np.argmax(y, axis=1)
+    print("Predicted classes", predicted_classes)
+    predicted_class = np.bincount(predicted_classes).argmax()
+    predicted_letter = alphabet[predicted_class]
+    print("Predicted class", predicted_class, predicted_letter)
+    return predicted_letter
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     from sign_game.ml.registry import load_model
     import cv2
     import matplotlib.pyplot as plt
     from sign_game.ml.landmarks import Landmarks
     latest_model = load_model()
-    image=cv2.imread('images/C.jpg')
+    image = cv2.imread('images/C.jpg')
     landmarks = Landmarks()
-    cv2_img_w_landmarks, landmark_object = landmarks.image_to_landmark(image, draw_landmarks=True)
+    cv2_img_w_landmarks, landmark_object = landmarks.image_to_landmark(
+        image, draw_landmarks=True)
     print(landmark_object)
     plt.imshow(cv2_img_w_landmarks)
     plt.show()
-    X_pred=np.reshape(np.array(landmark_object.values), (63, 1))
+    X_pred = np.reshape(np.array(landmark_object.values), (63, 1))
