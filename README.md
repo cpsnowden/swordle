@@ -1,4 +1,3 @@
-
 # The Creation of Swordle: Building a CNN Classifier with Mediapipe and Keras to identify American Sign Language Fingerspelling
 
 ## Introduction
@@ -17,21 +16,27 @@ The above flowchart shows the process that information follows to create the pre
 6. Model predicts based on input data
 7. Prediction sent from web-server back to frontend via FastAPI
 
-Our product is packaged across two repos, sign-game-server and sign-game-UI.
+Our product is packaged across three repos:
 
+1. swordle (this repo containing notebooks showing model development and a service to host the trained model)
+2. [swordle-streamlit-ui](https://github.com/cpsnowden/swordle-streamlit-ui) (a simple UI showing the prediction of a ASL letter from a photo)
+3. [swordle-ui](https://github.com/cpsnowden/swordle-ui) (a React UI to gamify ASL learning)
 
 ---
+
 # Instructions to Run
 
-## 1. Clone both repos to local pc
+## 1. Clone both repos
 
 ```bash
-gh repo clone cpsnowden/sign-game-server
+gh repo clone cpsnowden/swordle
 gh repo clone cpsnowden/swordle-streamlit-ui
 ```
-## 2. Start web-server in sign-game-server
+
+## 2. Start web-server in swordle
 
 With a terminal instance inside sign-game-server:
+
 #### Create VENV
 
 ```bash
@@ -51,13 +56,15 @@ pip install -r requirements.txt
 ```bash
 make run
 ```
+
 This starts the webserver locally.
 
-## 3. Start the UI in swordle-streamlit-ui
+## 3. Start the streamlit UI in swordle-streamlit-ui
 
 #### CD into sign-game-UI
+
 ```bash
-cd ../sign-game-UI
+cd ../swordle-streamlit-ui
 ```
 
 #### Start local API
@@ -67,9 +74,11 @@ make run_local
 ```
 
 #### Connect to localhost
+
 - click on the link in your terminal or follow the URL presented
 
 # Development FAQ
+
 #### Running Local API with New Keras Model
 
 1. Update .env with the path to the new model
@@ -81,3 +90,8 @@ make run_local
 
 If you are developing on mac and get a runtime error using protobuf, this is
 due to a dependency conflict, and you can fix it by copying [helper/builder.py](helper/builder.py) to `<your-site-packages>/google/protobuf/internal/`
+
+#### Deployment
+
+This main branch of this repository is build automatically using Google Cloud Build and
+deployed on Google Cloud Run
