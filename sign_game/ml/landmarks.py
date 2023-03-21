@@ -7,6 +7,7 @@ import os
 import numpy as np
 
 
+
 class Landmarks():
     def __init__(self, static_image_mode=False):
         self.mp_hands = mp.solutions.hands  # hands model
@@ -59,9 +60,9 @@ class Landmarks():
                 landmark = detected_hand.landmark[handmark]
                 # ??
                 name = str(handmark)[13:]
-                landmark_object[name+'_x'] = landmark.x
-                landmark_object[name+'_y'] = landmark.y
-                landmark_object[name+'_z'] = landmark.z
+                landmark_object[name+'_X'] = landmark.x
+                landmark_object[name+'_Y'] = landmark.y
+                landmark_object[name+'_Z'] = landmark.z
 
             return landmark_object
 
