@@ -76,3 +76,8 @@ make run_local
 2. Run `make run`
 3. Check that you model is picked up at http://localhost:8000/info
 4. To switch production to the new model ensure you update `.env.yaml`
+
+#### Developing on Mac
+
+If you are developing on mac and get a runtime error using protobuf, this is
+due to a dependency conflict, and you can fix it by copying [helper/builder.py](helper/builder.py) to `<your-site-packages>/google/protobuf/internal/`
