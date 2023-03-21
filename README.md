@@ -61,7 +61,7 @@ This starts the webserver locally.
 
 ## 3. Start the streamlit UI in swordle-streamlit-ui
 
-#### CD into sign-game-UI
+#### CD into swordle-streamlit-ui
 
 ```bash
 cd ../swordle-streamlit-ui
