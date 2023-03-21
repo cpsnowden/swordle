@@ -21,6 +21,8 @@ class Landmarks():
         return image, results
 
     def draw_landmarks(self, image, results):
+
+        #use mediapipe's in-built methods to identify the coordinates of all hand landmarks in an image
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:
                 self.mp_drawing.draw_landmarks(
@@ -33,13 +35,13 @@ class Landmarks():
     def get_landmark_object(self, results):
         landmark_object = {}
         if results.multi_hand_landmarks:
-            for handmark in self.mp_hands.HandLandmark: 
+            for handmark in self.mp_hands.HandLandmark:
                 landmark = results.multi_hand_landmarks[0].landmark[handmark]
                 name = str(handmark)[13:]
                 landmark_object[name+'_X'] = landmark.x
                 landmark_object[name+'_Y'] = landmark.y
                 landmark_object[name+'_Z'] = landmark.z
-            
+
         return(landmark_object)
 
     def image_to_landmark(self, frame):
@@ -73,39 +75,49 @@ class Landmarks():
                 array_landmark_objects.append(landmark_object)
             else:
                 break
-            
+
         cap.release()
         cv2.destroyAllWindows()
 
         print(pd.DataFrame.from_dict(array_landmark_objects).dropna().reset_index(drop=True))
 
     def create_csv_from_dataset_folder(self):
- 
+
+        # create a list of landmark objects, identify current directory and ensure asl_dataset is constructed properly
+        # asl_dataset must be in the format discussed in the readme
         array_landmark_objects = []
-        curr_dir = os.getcwd() 
+        curr_dir = os.getcwd()
         img_ds_path = curr_dir + '/asl_dataset'
         dir_folders = os.listdir(img_ds_path)
 
+        # loop through each of the folders
         for folder_name in dir_folders:
             folder_files = os.listdir(img_ds_path+'/'+folder_name)
 
+            #loop through each of the images, reading them in
             for image_name in folder_files:
                 image_path = img_ds_path+'/'+folder_name+'/'+image_name
                 image = cv2.imread(image_path)
 
+                # Create landmark objects from the previous functions in the script containing the appropriate coords
                 image_with_landmarks, landmark_object = self.image_to_landmark(image)
 
                 landmark_object['TARGET'] = folder_name.upper()
 
+                # write landmarks onto the landmark image
                 landmark_image_path = curr_dir +'/asl_dataset_landmarks/'+folder_name+'/'+image_name
                 cv2.imwrite(landmark_image_path, image_with_landmarks)
                 cv2.waitKey(0)
                 landmark_object['PATH'] = './asl_dataset_landmarks/'+folder_name+'/'+image_name
 
+                # store landmark coordinates in the landmark object
                 array_landmark_objects.append(landmark_object)
 
+        # create a DataFrame from the list of landmark objects
         df = pd.DataFrame.from_dict(array_landmark_objects)
 
+
+        # save the CSV
         try:
             df.to_csv('./images_ds.csv')
         except Exception as e:
@@ -122,4 +134,3 @@ if __name__ == '__main__':
     # landmarks.get_image_with_landmarks(image_path)
     # landmarks.video_to_landmark(video_path)
     landmarks.create_csv_from_dataset_folder()
-
