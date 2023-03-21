@@ -40,9 +40,9 @@ With a terminal instance inside sign-game-server:
 #### Create VENV
 
 ```bash
-pyenv virtualenv sign-game-server
-pyenv activate sign-game-server
-pyenv local sign-game-server
+pyenv virtualenv swordle
+pyenv activate swordle
+pyenv local swordle
 ```
 
 #### Install Requirements
