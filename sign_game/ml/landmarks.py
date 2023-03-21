@@ -1,18 +1,15 @@
 
-import matplotlib.pyplot as plt
 import mediapipe as mp
 import cv2
-import pandas as pd
-import os
 import numpy as np
 
+mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
 
 
 class Landmarks():
     def __init__(self, static_image_mode=False):
-        self.mp_hands = mp.solutions.hands  # hands model
-        self.mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
-        self.model = self.mp_hands.Hands(
+        self.model = mp_hands.Hands(
             min_detection_confidence=0.5,
             min_tracking_confidence=0.5,
             max_num_hands=1,
@@ -45,10 +42,10 @@ class Landmarks():
     def __draw_landmarks(self, image, results):
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:
-                self.mp_drawing.draw_landmarks(
+                mp_drawing.draw_landmarks(
                     image,
                     hand_landmarks,
-                    self.mp_hands.HAND_CONNECTIONS)
+                    mp_hands.HAND_CONNECTIONS)
 
         return image
 
@@ -56,7 +53,7 @@ class Landmarks():
         if results.multi_hand_landmarks:
             landmark_object = {}
             detected_hand = results.multi_hand_landmarks[0]
-            for handmark in self.mp_hands.HandLandmark:
+            for handmark in mp_hands.HandLandmark:
                 landmark = detected_hand.landmark[handmark]
                 # ??
                 name = str(handmark)[13:]
@@ -74,7 +71,7 @@ class Landmarks():
                 landmark = detected_hand.landmark[handmark]
                 return (landmark.x, landmark.y, landmark.z)
 
-            return np.array([extract_handmark(handmark) for handmark in self.mp_hands.HandLandmark])
+            return np.array([extract_handmark(handmark) for handmark in mp_hands.HandLandmark])
 
     def image_to_landmark_np(self, frame, draw_landmarks=False):
 
