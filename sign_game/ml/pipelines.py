@@ -1,8 +1,6 @@
 from sklearn.compose import ColumnTransformer, make_column_selector
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import Pipeline
-# from tensorflow.keras import Model
-# from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 import pandas as pd
 
 LANDMARK_NAME = [
@@ -70,7 +68,3 @@ def create_preprocessing_pipeline() -> Pipeline:
         ("normalize_frame", frame_normalizer),
         ("reorder_columns", column_reorder)
     ]).set_output(transform="pandas")
-
-
-# def create_classifier(model: Model):
-    # return KerasClassifier(model=model)

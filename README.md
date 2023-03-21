@@ -5,7 +5,7 @@
 
 As part of our final project for the 9 week Data Science bootcamp with Le Wagon, our team created a CNN classifier to identify different American Sign Language Fingerspelling letters packaged into a word game to allow the user to practice their signing in American Sign Languge. We chose American Sign Language as this was the language that we were able to find the most data for, but given more resources wand a longer time frame we would have liked to source more accurate Auslan data and expanded out approach to include words as well as individual letters.
 
-![Flowchart](flowchart.png)
+![Flowchart](docs/flowchart.png)
 
 The above flowchart shows the process that information follows to create the prediction:
 
@@ -27,7 +27,7 @@ Our product is packaged across two repos, sign-game-server and sign-game-UI.
 
 ```bash
 gh repo clone cpsnowden/sign-game-server
-gh repo clone cpsnowden/sign-game-UI
+gh repo clone cpsnowden/swordle-streamlit-ui
 ```
 ## 2. Start web-server in sign-game-server
 
@@ -53,17 +53,7 @@ make run
 ```
 This starts the webserver locally.
 
-## 3. Start the UI in sign-game-UI
-#### Running Local API with New Keras Model
-
-1. Update .env with the path to the new model
-2. Run `make run`
-3. Check that you model is picked up at http://localhost:8000/info
-4. To switch production to the new model ensure you update `env.yaml`
-
-## Converting images to landmark data - using scripts - Landmarks.py
-
-1. Structure folder as per the following:
+## 3. Start the UI in swordle-streamlit-ui
 
 #### CD into sign-game-UI
 ```bash
@@ -78,3 +68,16 @@ make run_local
 
 #### Connect to localhost
 - click on the link in your terminal or follow the URL presented
+
+# Development FAQ
+#### Running Local API with New Keras Model
+
+1. Update .env with the path to the new model
+2. Run `make run`
+3. Check that you model is picked up at http://localhost:8000/info
+4. To switch production to the new model ensure you update `.env.yaml`
+
+#### Developing on Mac
+
+If you are developing on mac and get a runtime error using protobuf, this is
+due to a dependency conflict, and you can fix it by copying [helper/builder.py](helper/builder.py) to `<your-site-packages>/google/protobuf/internal/`

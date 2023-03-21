@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 from sign_game.ml.landmarks import Landmarks
-from sign_game.ml.landmarks_utils import normalize_handmarks_per_image
+from sign_game.ml.normalization import normalize_handmarks_per_image
 
 
 class NoHandDetectedError(Exception):
@@ -16,7 +16,7 @@ class NoHandDetectedError(Exception):
 
 single_image_landmarks = Landmarks(static_image_mode=True)
 
-
+# TODO sort this function out
 def frames_to_landmarks(frames) -> np.ndarray:
 
     frames_landmarks = []
