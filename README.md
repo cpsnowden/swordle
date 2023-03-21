@@ -53,12 +53,7 @@ make run
 ```
 This starts the webserver locally.
 
-<<<<<<< HEAD
-
-## 3. Start the UI in sign-game-UI
-=======
 ## 3. Start the UI in swordle-streamlit-ui
->>>>>>> origin
 
 #### CD into sign-game-UI
 ```bash
@@ -74,24 +69,15 @@ make run_local
 #### Connect to localhost
 - click on the link in your terminal or follow the URL presented
 
-<<<<<<< HEAD
----
-
-=======
 # Development FAQ
->>>>>>> origin
 #### Running Local API with New Keras Model
 
 1. Update .env with the path to the new model
 2. Run `make run`
 3. Check that you model is picked up at http://localhost:8000/info
-<<<<<<< HEAD
-4. To switch production to the new model ensure you update `env.yaml`
-=======
 4. To switch production to the new model ensure you update `.env.yaml`
 
 #### Developing on Mac
 
 If you are developing on mac and get a runtime error using protobuf, this is
 due to a dependency conflict, and you can fix it by copying [helper/builder.py](helper/builder.py) to `<your-site-packages>/google/protobuf/internal/`
->>>>>>> origin
