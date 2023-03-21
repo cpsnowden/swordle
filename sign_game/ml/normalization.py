@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def normalize_handmarks_per_image(df):
+def normalize_handmarks_per_image(df: pd.DataFrame) -> pd.DataFrame:
     """
     Normalize handmarks per image in order to centralize them against the
     mean x,y and z positions (hand centroid)
@@ -23,31 +23,3 @@ def normalize_handmarks_per_image(df):
     z_norm = normalize_axis(z)
     return pd.concat([x_norm, y_norm, z_norm, other],
                      axis='columns')[df.columns]
-
-
-if __name__ == "__main__":
-    df = pd.DataFrame([{
-        "L1_X": 1,
-        "L1_Y": 1,
-        "L1_Z": 1,
-        "L2_X": 2,
-        "L2_Y": 2,
-        "L2_Z": 2,
-        "L3_X": 3,
-        "L3_Y": 3,
-        "L3_Z": 3,
-        "OTHER": 1
-    }, {
-        "L1_X": 1,
-        "L1_Y": 1,
-        "L1_Z": 1,
-        "L2_X": 4,
-        "L2_Y": 4,
-        "L2_Z": 4,
-        "L3_X": 100,
-        "L3_Y": 100,
-        "L3_Z": 100,
-        "OTHER": 1
-    }])
-    print(df)
-    print(normalize_handmarks_per_image(df))
