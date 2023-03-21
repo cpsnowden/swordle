@@ -9,6 +9,7 @@ from sign_game.api.dependencies import resolve_model
 from sign_game.util.images import b64_frames_to_cv2, bytes_to_cv2
 from sign_game.ml.preprocessing import preprocess, NoHandDetectedError
 from sign_game.ml.model import predict
+import numpy as np
 
 router = APIRouter(prefix="/letter-prediction", tags=["Letter Prediction"])
 
@@ -48,5 +49,8 @@ def process(cv2_imgs, model) -> LetterPredictionResponse:
     except NoHandDetectedError:
         return LetterPredictionResponse(predictionStatus=PredictionStatus.no_hand_detected)
 
-    y_pred = predict(model, X_pred)
+    # Expand axis for keras
+    X_pred_np = X_pred.to_numpy()[:, :, np.newaxis]
+
+    y_pred = predict(model, X_pred_np)
     return LetterPredictionResponse(predictionStatus=PredictionStatus.success, prediction=y_pred)
