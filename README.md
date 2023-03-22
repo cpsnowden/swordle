@@ -24,6 +24,8 @@ Our product is packaged across three repos:
 
 For more information on model preparation and training, please see the [Summary.ipynb](./notebooks/Summary.ipynb) notebook in the notebooks folder.
 
+Inspiration for the CNN model architecture was derived from [this notebook](https://www.kaggle.com/code/mlanangafkaar/cnn-with-mediapipe-for-sign-language-recognition/notebook) on kaggle.
+
 We were able to achieve results of 0.71% accuracy against our self-constructed real-world sign test set, and >90% cross-validated accuracy.
 
 ---
