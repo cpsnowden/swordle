@@ -2,14 +2,14 @@
 
 ## Introduction
 
-As part of our final project for the 9 week Data Science bootcamp with Le Wagon, our team created a CNN classifier to identify different American Sign Language Fingerspelling letters packaged into a word game to allow the user to practice their signing in American Sign Languge. We chose American Sign Language as this was the language that we were able to find the most data for, but given more resources wand a longer time frame we would have liked to source more accurate Auslan data and expanded out approach to include words as well as individual letters.
+As part of our final project for the 9 week Data Science bootcamp with Le Wagon, our team created a CNN classifier to identify different American Sign Language Fingerspelling letters packaged into a word game to allow the user to practice their signing in American Sign Language. We chose American Sign Language as this was the language that we were able to find the most data for, but given more resources and a longer time frame, we would have liked to source more accurate Auslan data and expanded our approach to include words as well as individual letters.
 
 ![Flowchart](docs/flowchart.png)
 
 The above flowchart shows the process that information follows to create the prediction:
 
 1. Image capture from frontend camera
-2. Frontend sends to web server via FastAPI
+2. Frontend sends image to web server via FastAPI
 3. Web server applies Mediapipe coordinate transformation to image
 4. Data is normalized and preprocessed
 5. Pre-processed data is passed to model for prediction
@@ -21,6 +21,12 @@ Our product is packaged across three repos:
 1. swordle (this repo containing notebooks showing model development and a service to host the trained model)
 2. [swordle-streamlit-ui](https://github.com/cpsnowden/swordle-streamlit-ui) (a simple UI showing the prediction of a ASL letter from a photo)
 3. [swordle-ui](https://github.com/cpsnowden/swordle-ui) (a React UI to gamify ASL learning)
+
+For more information on model preparation and training, please see the [Summary.ipynb](./notebooks/Summary.ipynb) notebook in the notebooks folder.
+
+Inspiration for the CNN model architecture was derived from [this notebook](https://www.kaggle.com/code/mlanangafkaar/cnn-with-mediapipe-for-sign-language-recognition/notebook) on kaggle.
+
+We were able to achieve results of 0.71% accuracy against our self-constructed real-world sign test set, and >90% cross-validated accuracy.
 
 ---
 
@@ -35,7 +41,7 @@ gh repo clone cpsnowden/swordle-streamlit-ui
 
 ## 2. Start web-server in swordle
 
-With a terminal instance inside sign-game-server:
+With a terminal instance inside swordle:
 
 #### Create VENV
 
@@ -93,5 +99,5 @@ due to a dependency conflict, and you can fix it by copying [helper/builder.py](
 
 #### Deployment
 
-This main branch of this repository is build automatically using Google Cloud Build and
+This main branch of this repository is built automatically using Google Cloud Build and
 deployed on Google Cloud Run
