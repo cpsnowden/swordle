@@ -1,10 +1,10 @@
 steps:
-  - name: python:3.10
+  - name: python:3.7
     entrypoint: python
     args:
       - "--version"
   # Install dependencies
-  - name: python:3.10
+  - name: python:3.7
     entrypoint: pip
     args:
       - "install"
