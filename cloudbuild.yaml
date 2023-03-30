@@ -1,10 +1,10 @@
 steps:
-  - name: python
+  - name: python:3.10.10-alpine
     entrypoint: python
     args:
       - "--version"
   # Install dependencies
-  - name: python
+  - name: python:3.10.10-alpine
     entrypoint: pip
     args:
       - "install"
