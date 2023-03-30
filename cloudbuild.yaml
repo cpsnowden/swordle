@@ -1,4 +1,8 @@
 steps:
+  - name: python
+    entrypoint: python
+    args:
+      - "--version"
   # Install dependencies
   - name: python
     entrypoint: pip
