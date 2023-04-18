@@ -16,6 +16,10 @@ steps:
     args:
       - "update"
   - name: python:3.10.6-buster
+    entrypoint: pip
+    args:
+      - "freeze"
+  - name: python:3.10.6-buster
     entrypoint: apt-get
     args:
       - "install"
