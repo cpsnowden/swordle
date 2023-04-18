@@ -1,18 +1,7 @@
 import base64
-from typing import List
 
 import cv2
 import numpy as np
-
-
-def b64_frames_to_cv2(b64_frames: List[str]):
-    """
-        Convert a list of b64 images to CV2 color images
-
-        Returns: a generator of images
-    """
-    for frame in b64_frames:
-        yield b64_frame_to_cv2(frame)
 
 
 def b64_frame_to_cv2(b64_frame: str):
