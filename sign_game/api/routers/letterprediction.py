@@ -1,6 +1,5 @@
 from tensorflow.keras import Model
 from fastapi import APIRouter, UploadFile, Depends
-from typing import List
 from enum import Enum
 from pydantic import BaseModel
 from enum import Enum
@@ -12,10 +11,6 @@ from sign_game.ml.model import predict
 import numpy as np
 
 router = APIRouter(prefix="/letter-prediction", tags=["Letter Prediction"])
-
-
-class FrameSequence(BaseModel):
-    frames: List[str]
 
 
 class B64FrameRequest(BaseModel):
@@ -44,13 +39,6 @@ async def predict_letter_from_frame(img: UploadFile, model: Model = Depends(reso
 def predict_letter_from_b64_frame(frame_request: B64FrameRequest, model: Model = Depends(resolve_model)) -> LetterPredictionResponse:
     print(f"Received predict request for frame")
     cv2_img = b64_frame_to_cv2(frame_request.b64_frame)
-    return process(cv2_img, model)
-
-
-@router.post('/frame-sequence', deprecated=True)
-def predict_letter_from_frame_sequence(frame_sequence: FrameSequence, model: Model = Depends(resolve_model)) -> LetterPredictionResponse:
-    print(f"Received predict request for frame")
-    cv2_img = b64_frame_to_cv2(frame_sequence.frames[0])
     return process(cv2_img, model)
 
 
