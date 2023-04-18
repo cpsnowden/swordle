@@ -4,7 +4,7 @@ mediapipe; sys_platform != 'darwin' # Windows & Ubuntu Intel chips
 
 fastapi
 uvicorn[standard]
-opencv-python-headless
+opencv-python
 numpy
 pandas
 scikit-learn

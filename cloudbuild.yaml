@@ -5,6 +5,16 @@ steps:
       - "--version"
   # Install dependencies
   - name: python:3.10.6-buster
+    entrypoint: apt-get
+    args:
+      - "update"
+  - name: python:3.10.6-buster
+    entrypoint: apt-get
+    args:
+      - "install"
+      - "-y"
+      - "python3-opencv"
+  - name: python:3.10.6-buster
     entrypoint: pip
     args:
       - "install"
